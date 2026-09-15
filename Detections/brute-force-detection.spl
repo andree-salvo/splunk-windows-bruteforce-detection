@@ -1,0 +1,7 @@
+index=* EventCode=4625
+| eval target_user=coalesce(TargetUserName,user,mvindex(Account_Name,-1))
+| eval source_ip=coalesce(IpAddress,src,Source_Network_Address)
+| bin _time span=5m
+| stats count AS failed_logins BY _time source_ip target_user
+| where failed_logins >= 5
+| sort - failed_logins
